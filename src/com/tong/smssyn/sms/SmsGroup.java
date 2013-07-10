@@ -37,9 +37,9 @@ public class SmsGroup {
 
 	public String getLastDate() {
 		long lastDate = sms.get(sms.size() - 1).getDate();
-		Log.d(TAG, "lastDate=" + String.valueOf(lastDate));
+		//Log.d(TAG, "lastDate=" + String.valueOf(lastDate));
 		long current = Calendar.getInstance().getTimeInMillis();
-		Log.d(TAG, "current=" + String.valueOf(current));
+		//Log.d(TAG, "current=" + String.valueOf(current));
 		SimpleDateFormat sdf = null;
 
 		if (current - lastDate > DAY_MILLISEC) {

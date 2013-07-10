@@ -1,5 +1,9 @@
 package com.tong.smssyn.sms;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 public class SmsEntity {
 	
@@ -92,6 +96,11 @@ public class SmsEntity {
 
 	public long getDate() {
 		return date;
+	}
+	
+	public String getFormatDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm", Locale.getDefault());
+		return sdf.format(new Date(date));
 	}
 
 	public void setDate(long date) {

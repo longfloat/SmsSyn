@@ -17,7 +17,7 @@ public class GlobalApp extends Application {
 
 	@Override
 	public void onCreate() {
-		Log.d(TAG, "application create...");
+		Log.i(TAG, "application create...");
 		mGlobalApp = this;
 		mEvernoteSession = EvernoteSession.getInstance(this, CONSUMER_KEY,
 				CONSUMER_SECRET, EVERNOTE_SERVICE);
@@ -31,6 +31,7 @@ public class GlobalApp extends Application {
 
 	public static EvernoteSession getEvernoteSession() {
 		if (null == mEvernoteSession) {
+			Log.d(TAG, "EvernoteSession is null...");
 			mEvernoteSession = EvernoteSession.getInstance(mGlobalApp,
 					CONSUMER_KEY, CONSUMER_SECRET, EVERNOTE_SERVICE);
 		}

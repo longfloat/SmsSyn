@@ -29,7 +29,7 @@ public class SmsParser {
 			String[] projection = new String[] { SmsEntity.ID,
 					SmsEntity.ADDRESS, SmsEntity.DATE, SmsEntity.BODY,
 					SmsEntity.PROTOCOL, SmsEntity.TYPE };
-			final String SORT_ORDER = "date desc";
+			final String SORT_ORDER = "date asc";
 			Cursor cursor = GlobalApp.getInstance().getContentResolver()
 					.query(uri, projection, null, null, SORT_ORDER);
 
@@ -48,14 +48,17 @@ public class SmsParser {
 					int id = cursor.getInt(indexId);
 					String address = cursor.getString(indexAddress).replace(
 							"+86", "");
+					address = address.replaceAll("\\s", "");
+					Log.i(TAG, address);
 					long date = cursor.getLong(indexDate);
 					String body = cursor.getString(indexBody);
 					int protocol = cursor.getInt(indexProtocol);
 					int type = cursor.getInt(indexType);
+					Log.i(TAG, String.valueOf(type));
 
 					SmsEntity smsEntity = new SmsEntity(id, address, body,
 							date, type, protocol);
-					Log.d(TAG, smsEntity.toString());
+					// Log.d(TAG, smsEntity.toString());
 					if (map.containsKey(address)) {
 						map.get(address).add(smsEntity);
 					} else {

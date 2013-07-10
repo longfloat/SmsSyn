@@ -15,4 +15,10 @@
     <string name="sms_count">3</string>
     
     <string name="menu_sync">同步短信</string>
+    
+    <string name="promp_sync_sms">同步短信中, 请稍后\.\.\.</string>
+    <string name="promp_sync_success">短信同步成功!</string>
+    <string name="promp_sync_fail">短信同步失败!</string>
+    
+    <string name="note_sms_address">与 %s 的对话</string>
 </resources>
