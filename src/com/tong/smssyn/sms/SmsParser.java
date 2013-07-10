@@ -46,7 +46,8 @@ public class SmsParser {
 
 				do {
 					int id = cursor.getInt(indexId);
-					String address = cursor.getString(indexAddress);
+					String address = cursor.getString(indexAddress).replace(
+							"+86", "");
 					long date = cursor.getLong(indexDate);
 					String body = cursor.getString(indexBody);
 					int protocol = cursor.getInt(indexProtocol);

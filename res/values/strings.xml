@@ -5,12 +5,14 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
+    <string name="label_sms_groups">SmsGroups</string>
+    
     <string name="empty_text"></string>
     
     <string name="sms_address">10086</string>
-    <string name="sms_last_date">2013-07-09 22:18:00</string>
+    <string name="sms_last_date">07/09 22:18</string>
     <string name="sms_body">余额不足, 请充值!</string>
     <string name="sms_count">3</string>
     
-
+    <string name="menu_sync">同步短信</string>
 </resources>

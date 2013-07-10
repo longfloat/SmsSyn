@@ -6,6 +6,7 @@
 
     <ListView
         android:id="@+id/sms_groups_listview"
+        style="?android:attr/listViewWhiteStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
     </ListView>

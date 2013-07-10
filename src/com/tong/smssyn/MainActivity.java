@@ -1,20 +1,19 @@
 package com.tong.smssyn;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
-
-import com.tong.smssyn.sms.SmsGroup;
-import com.tong.smssyn.sms.SmsParser;
 
 public class MainActivity extends Activity {
 
 	public static final String TAG = MainActivity.class.getSimpleName();
 
 	private TextView mText;
+	private Button mButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +21,18 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 
 		mText = (TextView) findViewById(R.id.main_text);
-		ArrayList<SmsGroup> groups = SmsParser.getSmsAll();
-		mText.setText(groups.toString());
+		mButton = (Button) findViewById(R.id.main_button);
+		mButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(v.getContext(),
+						SmsGroupsActivity.class);
+				startActivity(intent);
+
+			}
+		});
 	}
 
 	@Override
