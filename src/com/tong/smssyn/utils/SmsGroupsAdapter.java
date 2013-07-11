@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.tong.smssyn.R;
@@ -60,8 +59,6 @@ public class SmsGroupsAdapter extends BaseAdapter {
 					.findViewById(R.id.item_sms_groups_body);
 			viewHolder.lastDate = (TextView) convertView
 					.findViewById(R.id.item_sms_groups_date);
-			viewHolder.checkBox = (CheckBox) convertView
-					.findViewById(R.id.item_sms_groups_check_box);
 
 			convertView.setTag(viewHolder);
 		} else {
@@ -78,7 +75,6 @@ public class SmsGroupsAdapter extends BaseAdapter {
 
 	static class ViewHolder {
 		TextView address, body, lastDate, count;
-		CheckBox checkBox;
 	}
 
 }

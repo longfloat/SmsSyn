@@ -13,11 +13,11 @@ import com.tong.smssyn.GlobalApp;
 
 public class SmsParser {
 	private static final String TAG = SmsParser.class.getSimpleName();
-	
+
 	private static final String SMS_URI_ALL = "content://sms/";
-	
+
 	/**
-	 * 获取手机中的短消息,结果按照发件人进行分类
+	 * 获取手机中的短消息,结果按照会话对象进行分类
 	 * 
 	 * @return 获取到的短消息
 	 */
@@ -49,12 +49,12 @@ public class SmsParser {
 					String address = cursor.getString(indexAddress).replace(
 							"+86", "");
 					address = address.replaceAll("\\s", "");
-					Log.i(TAG, address);
+					// Log.i(TAG, address);
 					long date = cursor.getLong(indexDate);
 					String body = cursor.getString(indexBody);
 					int protocol = cursor.getInt(indexProtocol);
 					int type = cursor.getInt(indexType);
-					Log.i(TAG, String.valueOf(type));
+					// Log.i(TAG, String.valueOf(type));
 
 					SmsEntity smsEntity = new SmsEntity(id, address, body,
 							date, type, protocol);
@@ -82,7 +82,7 @@ public class SmsParser {
 		}
 
 		return smsGroups;
-		
+
 	}
 
 }

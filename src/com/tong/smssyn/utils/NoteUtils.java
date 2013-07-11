@@ -1,13 +1,17 @@
 package com.tong.smssyn.utils;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
-import android.R.integer;
 import android.util.Log;
 
+import com.evernote.client.android.AsyncNoteStoreClient;
 import com.evernote.client.android.EvernoteUtil;
 import com.evernote.client.android.OnClientCallback;
 import com.evernote.edam.type.Note;
+import com.evernote.edam.type.Notebook;
 import com.evernote.thrift.transport.TTransportException;
 import com.tong.smssyn.GlobalApp;
 import com.tong.smssyn.R;
@@ -15,24 +19,50 @@ import com.tong.smssyn.sms.SmsEntity;
 import com.tong.smssyn.sms.SmsGroup;
 
 public class NoteUtils {
-
 	private static final String TAG = NoteUtils.class.getSimpleName();
 
-	public static void createNote(String title, String content,
-			OnClientCallback<Note> callback) {
-		Note note = new Note();
-		note.setTitle(title);
-
-		StringBuilder builder = new StringBuilder();
-		builder.append(EvernoteUtil.NOTE_PREFIX);
-		builder.append(content);
-		builder.append(EvernoteUtil.NOTE_SUFFIX);
-
-		note.setContent(builder.toString());
-
+	public static void createSmsNote(final ArrayList<SmsGroup> groups,
+			final OnClientCallback<Note> callback) {
 		try {
-			GlobalApp.getEvernoteSession().getClientFactory()
-					.createNoteStoreClient().createNote(note, callback);
+
+			String guid = GlobalApp.getInstance().getNotebookGuid();
+			if (null == guid) {
+				Notebook notebook = new Notebook();
+				notebook.setName(Constants.APP_NAME);
+				AsyncNoteStoreClient ansc = GlobalApp.getEvernoteSession()
+						.getClientFactory().createNoteStoreClient();
+				ansc.createNotebook(notebook, new OnClientCallback<Notebook>() {
+
+					@Override
+					public void onSuccess(Notebook data) {
+						// TODO Auto-generated method stub
+						Log.i(TAG, "create notebook success!");
+						GlobalApp.getInstance()
+								.saveNotebookGuid(data.getGuid());
+						try {
+							saveSmsNote(groups, callback);
+						} catch (TTransportException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void onException(Exception e) {
+						// TODO Auto-generated method stub
+						e.printStackTrace();
+						try {
+							saveSmsNote(groups, callback);
+						} catch (TTransportException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+
+				});
+			} else {
+				saveSmsNote(groups, callback);
+			}
 
 		} catch (TTransportException e) {
 			// TODO: handle exception
@@ -40,39 +70,34 @@ public class NoteUtils {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void createNoteFromGroups(String title, ArrayList<SmsGroup> groups,
-			OnClientCallback<Note> callback) {
+
+	private static void saveSmsNote(ArrayList<SmsGroup> groups,
+			OnClientCallback<Note> callback) throws TTransportException {
 		Note note = new Note();
-		note.setTitle(title);
+		note.setTitle(Constants.NOTE_TITLE_PREFIX + getCurrentDate());
+		note.setNotebookGuid(GlobalApp.getInstance().getNotebookGuid());
 
 		StringBuilder builder = new StringBuilder();
 		builder.append(EvernoteUtil.NOTE_PREFIX);
-		builder.append(formatSmsFromGroups(groups));
+		builder.append(formatSmsForNote(groups));
 		builder.append(EvernoteUtil.NOTE_SUFFIX);
 
 		note.setContent(builder.toString());
 
-		try {
-			GlobalApp.getEvernoteSession().getClientFactory()
-					.createNoteStoreClient().createNote(note, callback);
-
-		} catch (TTransportException e) {
-			// TODO: handle exception
-			Log.d(TAG, e.getCause().toString());
-			e.printStackTrace();
-		}
+		GlobalApp.getEvernoteSession().getClientFactory()
+				.createNoteStoreClient().createNote(note, callback);
 	}
-	
-	public static String formatSmsFromGroups(ArrayList<SmsGroup> groups) {
+
+	public static String formatSmsForNote(ArrayList<SmsGroup> groups) {
 		StringBuilder builder = new StringBuilder();
 		for (SmsGroup smsGroup : groups) {
 			String address = smsGroup.getAddress();
 			builder.append("<h2>");
-			builder.append(GlobalApp.getInstance().getString(R.string.note_sms_address, address));
+			builder.append(GlobalApp.getInstance().getString(
+					R.string.note_sms_address, address));
 			builder.append("</h2><hr/>");
 			ArrayList<SmsEntity> smsEntities = smsGroup.getSms();
-			
+
 			for (SmsEntity smsEntity : smsEntities) {
 				int type = smsEntity.getType();
 				if (type == 2) {
@@ -94,10 +119,17 @@ public class NoteUtils {
 					builder.append("</p>");
 				}
 			}
-			
+
 			builder.append("<br/>");
 		}
 		return builder.toString();
 	}
 
+	private static String getCurrentDate() {
+		Calendar c = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddhhmmss",
+				Locale.getDefault());
+		String date = sdf.format(c.getTime());
+		return date;
+	}
 }

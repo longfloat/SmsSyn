@@ -2,23 +2,16 @@
 <resources>
 
     <string name="app_name">SmsSyn</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-    
-    <string name="label_sms_groups">SmsGroups</string>
-    
     <string name="empty_text"></string>
     
-    <string name="sms_address">10086</string>
-    <string name="sms_last_date">07/09 22:18</string>
-    <string name="sms_body">余额不足, 请充值!</string>
-    <string name="sms_count">3</string>
-    
     <string name="menu_sync">同步短信</string>
+    <string name="auth_success">授权成功, 请点击"同步短信"将手机短信保存到印象笔记!</string>
+    <string name="auth_fail">授权失败, 请重试!</string>
     
     <string name="promp_sync_sms">同步短信中, 请稍后\.\.\.</string>
     <string name="promp_sync_success">短信同步成功!</string>
     <string name="promp_sync_fail">短信同步失败!</string>
     
     <string name="note_sms_address">与 %s 的对话</string>
+    <string name="sms_empty">没有短信息!</string>
 </resources>
