@@ -14,11 +14,12 @@ public class GlobalApp extends Application {
 	private static final String TAG = GlobalApp.class.getSimpleName();
 	private static final String CONSUMER_KEY = "longfloat";
 	private static final String CONSUMER_SECRET = "ad75cc2a81091e78";
-	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.SANDBOX;
+	// private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE =
+	// EvernoteSession.EvernoteService.SANDBOX;
+	private static final EvernoteSession.EvernoteService EVERNOTE_SERVICE = EvernoteSession.EvernoteService.PRODUCTION;
 
 	private static GlobalApp mGlobalApp = null;
 	private static EvernoteSession mEvernoteSession = null;
-	private static final String NOTEBOOK_GUID = "notebook_guid";
 
 	@Override
 	public void onCreate() {
@@ -46,9 +47,10 @@ public class GlobalApp extends Application {
 	public void saveNotebookGuid(String guid) {
 		if (!TextUtils.isEmpty(guid)) {
 			SharedPreferences pref = getSharedPreferences(
-					Constants.PREFS_NOTEBOOK_GUID, Context.MODE_PRIVATE);
+Constants.PREFS_NAME,
+					Context.MODE_PRIVATE);
 			SharedPreferences.Editor editor = pref.edit();
-			editor.putString(NOTEBOOK_GUID, guid);
+			editor.putString(Constants.PREFS_NOTEBOOK_GUID, guid);
 			editor.commit();
 		}
 
@@ -56,8 +58,24 @@ public class GlobalApp extends Application {
 
 	public String getNotebookGuid() {
 		SharedPreferences pref = getSharedPreferences(
-				Constants.PREFS_NOTEBOOK_GUID, Context.MODE_PRIVATE);
-		return pref.getString(NOTEBOOK_GUID, null);
+Constants.PREFS_NAME,
+				Context.MODE_PRIVATE);
+		return pref.getString(Constants.PREFS_NOTEBOOK_GUID, null);
+	}
+
+	public boolean isAuthed() {
+		SharedPreferences pref = getSharedPreferences(Constants.PREFS_NAME,
+				Context.MODE_PRIVATE);
+
+		return pref.getBoolean(Constants.PREFS_IS_AUTHED, false);
+	}
+
+	public void setHasAuthed(boolean isAuthed) {
+		SharedPreferences pref = getSharedPreferences(Constants.PREFS_NAME,
+				Context.MODE_PRIVATE);
+		SharedPreferences.Editor editor = pref.edit();
+		editor.putBoolean(Constants.PREFS_IS_AUTHED, isAuthed);
+		editor.commit();
 	}
 
 }

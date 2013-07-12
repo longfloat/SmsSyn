@@ -3,6 +3,7 @@ package com.tong.smssyn.utils;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import android.util.Log;
@@ -25,48 +26,81 @@ public class NoteUtils {
 			final OnClientCallback<Note> callback) {
 		try {
 
-			String guid = GlobalApp.getInstance().getNotebookGuid();
-			if (null == guid) {
-				Notebook notebook = new Notebook();
-				notebook.setName(Constants.APP_NAME);
-				AsyncNoteStoreClient ansc = GlobalApp.getEvernoteSession()
-						.getClientFactory().createNoteStoreClient();
-				ansc.createNotebook(notebook, new OnClientCallback<Notebook>() {
+			final AsyncNoteStoreClient ansc = GlobalApp.getEvernoteSession()
+					.getClientFactory().createNoteStoreClient();
 
-					@Override
-					public void onSuccess(Notebook data) {
-						// TODO Auto-generated method stub
-						Log.i(TAG, "create notebook success!");
-						GlobalApp.getInstance()
-								.saveNotebookGuid(data.getGuid());
+			ansc.listNotebooks(new OnClientCallback<List<Notebook>>() {
+
+				@Override
+				public void onSuccess(List<Notebook> data) {
+					// TODO Auto-generated method stub
+					boolean hasNotebook = false;
+					for (Notebook notebook : data) {
+						if (notebook.getName().equals(Constants.APP_NAME)) {
+							hasNotebook = true;
+							GlobalApp.getInstance().saveNotebookGuid(
+									notebook.getGuid());
+							break;
+						}
+					}
+
+					if (hasNotebook) {
 						try {
+							Log.i(TAG, "notebook existed!");
 							saveSmsNote(groups, callback);
 						} catch (TTransportException e) {
 							// TODO Auto-generated catch block
+							Log.d(TAG,
+									"has notebook >> create note exception!");
 							e.printStackTrace();
 						}
-					}
+					} else {
+						Log.i(TAG, "notebook not existed, create it!");
+						Notebook notebook = new Notebook();
+						notebook.setName(Constants.APP_NAME);
+						ansc.createNotebook(notebook,
+								new OnClientCallback<Notebook>() {
 
-					@Override
-					public void onException(Exception e) {
-						// TODO Auto-generated method stub
-						e.printStackTrace();
-						try {
-							saveSmsNote(groups, callback);
-						} catch (TTransportException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
-					}
+									@Override
+									public void onSuccess(Notebook data) {
+										// TODO Auto-generated method stub
+										Log.i(TAG, "create notebook success!");
+										GlobalApp.getInstance()
+												.saveNotebookGuid(
+														data.getGuid());
+										try {
+											saveSmsNote(groups, callback);
+										} catch (TTransportException e) {
+											// TODO Auto-generated catch block
+											Log.d(TAG,
+													"has no notebook >> create note exception!");
+											e.printStackTrace();
+										}
+									}
 
-				});
-			} else {
-				saveSmsNote(groups, callback);
-			}
+									@Override
+									public void onException(Exception e) {
+										// TODO Auto-generated method stub
+										e.printStackTrace();
+										Log.d(TAG,
+												"has no notebook >> create notebook exception!");
+									}
+								});
+					}
+				}
+
+				@Override
+				public void onException(Exception exception) {
+					// TODO Auto-generated method stub
+					Log.d(TAG, "list noteboos exception!");
+					exception.printStackTrace();
+				}
+
+			});
 
 		} catch (TTransportException e) {
 			// TODO: handle exception
-			Log.d(TAG, e.getCause().toString());
+			Log.d(TAG, "asnc inital exception!");
 			e.printStackTrace();
 		}
 	}

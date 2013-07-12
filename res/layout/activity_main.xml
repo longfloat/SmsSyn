@@ -2,20 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-
-    <ListView
-        android:id="@+id/sms_groups_listview"
-        style="?android:attr/listViewWhiteStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin" >
 
     <TextView
-        android:id="@+id/sms_groups_nonetext"
+        android:id="@+id/main_text_auth_promp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name" >
-    </TextView>
+        android:text="@string/auth_promp" />
+
+    <Button
+        android:id="@+id/main_button_auth"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/auth_button" />
 
 </LinearLayout>
